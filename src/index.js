@@ -38,6 +38,8 @@ async function run(octokit, context, token) {
     `PR #${pull_number} is targetted at ${pr.base.ref} (${pr.base.sha})`,
   );
 
+  const maximumChangeThreshold = getInput('maximum-change-threshold');
+  console.log({ maximumChangeThreshold });
   const buildScript = getInput('build-script') || 'build';
   const cwd = process.cwd();
 
@@ -129,12 +131,14 @@ async function run(octokit, context, token) {
   console.log(cliText);
   endGroup();
 
-  const markdownDiff = diffTable(diff, {
+  const { markdownDiff, totalSize, totalDelta } = diffTable(diff, {
     collapseUnchanged: toBool(getInput('collapse-unchanged')),
     omitUnchanged: toBool(getInput('omit-unchanged')),
     showTotal: toBool(getInput('show-total')),
     minimumChangeThreshold: parseInt(getInput('minimum-change-threshold'), 10),
   });
+
+  console.log(totalSize, totalDelta);
 
   let outputRawMarkdown = false;
 
