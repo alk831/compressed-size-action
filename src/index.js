@@ -25,6 +25,7 @@ async function run(octokit, context, token) {
     );
   }
 
+  console.log('Could not retrieve PR information');
   if (getInput('cwd')) process.chdir(getInput('cwd'));
 
   const plugin = new SizePlugin({
