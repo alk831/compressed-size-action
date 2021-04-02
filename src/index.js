@@ -39,10 +39,10 @@ async function run(octokit, context, token) {
   );
 
   const maximumChangeThreshold = getInput('maximum-change-threshold');
-  throw new Error(`maximumChangeThreshold: ${maximumChangeThreshold}`);
-
   debug(`maximumChangeThreshold: ${maximumChangeThreshold}`);
   console.log(`maximumChangeThreshold: ${maximumChangeThreshold}`);
+  throw new Error(`maximumChangeThreshold: ${maximumChangeThreshold}`);
+
   const buildScript = getInput('build-script') || 'build';
   const cwd = process.cwd();
 
