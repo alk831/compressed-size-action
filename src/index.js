@@ -39,7 +39,8 @@ async function run(octokit, context, token) {
   );
 
   const maximumChangeThreshold = getInput('maximum-change-threshold');
-  console.log({ maximumChangeThreshold });
+  debug(`maximumChangeThreshold: ${maximumChangeThreshold}`);
+  console.log(`maximumChangeThreshold: ${maximumChangeThreshold}`);
   const buildScript = getInput('build-script') || 'build';
   const cwd = process.cwd();
 
@@ -138,7 +139,7 @@ async function run(octokit, context, token) {
     minimumChangeThreshold: parseInt(getInput('minimum-change-threshold'), 10),
   });
 
-  console.log(totalSize, totalDelta);
+  console.log(JSON.stringify({ totalSize, totalDelta }));
 
   let outputRawMarkdown = false;
 
