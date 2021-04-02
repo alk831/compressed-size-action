@@ -25,7 +25,6 @@ async function run(octokit, context, token) {
     );
   }
 
-  console.log('Could not retrieve PR information');
   if (getInput('cwd')) process.chdir(getInput('cwd'));
 
   const plugin = new SizePlugin({
@@ -40,6 +39,8 @@ async function run(octokit, context, token) {
   );
 
   const maximumChangeThreshold = getInput('maximum-change-threshold');
+	throw new Error(`maximumChangeThreshold: ${maximumChangeThreshold}`');
+
   debug(`maximumChangeThreshold: ${maximumChangeThreshold}`);
   console.log(`maximumChangeThreshold: ${maximumChangeThreshold}`);
   const buildScript = getInput('build-script') || 'build';
