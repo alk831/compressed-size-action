@@ -39,13 +39,7 @@ async function run(octokit, context, token) {
     `PR #${pull_number} is targetted at ${pr.base.ref} (${pr.base.sha})`,
   );
 
-  const maximumChangeThreshold = getInput('maximum-change-threshold');
-  debug(
-    JSON.stringify({
-      maximumChangeThreshold,
-      type: typeof maximumChangeThreshold,
-    }),
-  );
+  const maximumChangeThreshold = Number(getInput('maximum-change-threshold'));
   console.log(
     JSON.stringify({
       maximumChangeThreshold,
@@ -151,14 +145,6 @@ async function run(octokit, context, token) {
     minimumChangeThreshold: parseInt(getInput('minimum-change-threshold'), 10),
   });
 
-  if (totalDelta > maximumChangeThreshold) {
-    throw new Error(
-      `The build size change has exceeded the maximum threshold.
-			Change: ${prettyBytes(totalDelta)}
-			Maximum allowed: ${prettyBytes(maximumChangeThreshold)}`,
-    );
-  }
-
   let outputRawMarkdown = false;
 
   const commentInfo = {
@@ -255,6 +241,7 @@ async function run(octokit, context, token) {
 		`.replace(/^(\t|  )+/gm, ''),
     );
   }
+  throwIfThresholdExcedeed({ maximumChangeThreshold, totalDelta });
 
   console.log('All done!');
 }
@@ -288,3 +275,13 @@ async function createCheck(octokit, context) {
     setFailed(e.message);
   }
 })();
+
+function throwIfThresholdExcedeed({ totalDelta, maximumChangeThreshold }) {
+  if (totalDelta > maximumChangeThreshold) {
+    throw new Error(
+      `The build size change has exceeded the maximum threshold.
+			Change: ${prettyBytes(totalDelta)}
+			Maximum allowed: ${prettyBytes(maximumChangeThreshold)}`,
+    );
+  }
+}
