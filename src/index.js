@@ -46,6 +46,12 @@ async function run(octokit, context, token) {
       type: typeof maximumChangeThreshold,
     }),
   );
+  console.log(
+    JSON.stringify({
+      maximumChangeThreshold,
+      type: typeof maximumChangeThreshold,
+    }),
+  );
 
   const buildScript = getInput('build-script') || 'build';
   const cwd = process.cwd();
