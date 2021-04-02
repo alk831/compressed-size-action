@@ -38,7 +38,7 @@ inputs:
     description: 'A custom working directory to execute the action in relative to repo root (defaults to .)'
   maximum-change-threshold:
     description: 'The threshold for defining a maximum allowed change size'
-    required: false
+    required: true
 runs:
   using: 'node12'
   main: 'index.js'

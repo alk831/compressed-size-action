@@ -10,6 +10,7 @@ import { context, getOctokit } from '@actions/github';
 import { exec } from '@actions/exec';
 import SizePlugin from 'size-plugin-core';
 import { fileExists, diffTable, toBool, stripHash } from './utils.js';
+import prettyBytes from 'pretty-bytes';
 
 async function run(octokit, context, token) {
   const { owner, repo, number: pull_number } = context.issue;
@@ -40,8 +41,10 @@ async function run(octokit, context, token) {
 
   const maximumChangeThreshold = getInput('maximum-change-threshold');
   debug(
-    `maximumChangeThreshold: ${maximumChangeThreshold}`,
-    typeof maximumChangeThreshold,
+    JSON.stringify({
+      maximumChangeThreshold,
+      type: typeof maximumChangeThreshold,
+    }),
   );
 
   const buildScript = getInput('build-script') || 'build';
@@ -142,7 +145,13 @@ async function run(octokit, context, token) {
     minimumChangeThreshold: parseInt(getInput('minimum-change-threshold'), 10),
   });
 
-  console.log(JSON.stringify({ totalSize, totalDelta }));
+  if (totalDelta > maximumChangeThreshold) {
+    throw new Error(
+      `The build size change has exceeded the maximum threshold.
+			Change: ${prettyBytes(totalDelta)}
+			Maximum allowed: ${prettyBytes(maximumChangeThreshold)}`,
+    );
+  }
 
   let outputRawMarkdown = false;
 
